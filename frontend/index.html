@@ -1,0 +1,528 @@
+﻿<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='UTF-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+  <title>Luxury Hotel Booking</title>
+  <link rel='stylesheet' href='style.css'>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css'>
+  <script src='https://cdn.jsdelivr.net/npm/chart.js'></script>
+</head>
+<body>
+  <div id='auth-page' class='auth-page active'>
+    <div class='auth-container'>
+      <div class='auth-box'>
+        <h1>Hotel Booking System</h1>
+
+        <div id='login-form' class='auth-form active'>
+          <h2>Sign In</h2>
+          <form onsubmit='handleLogin(event)'>
+            <div class='form-group'>
+              <label>Email</label>
+              <input type='email' id='login-email' placeholder='Enter your email' required>
+            </div>
+            <div class='form-group'>
+              <label>Password</label>
+              <input type='password' id='login-password' placeholder='Enter your password' required>
+            </div>
+            <button type='submit' class='btn-primary'>Sign In</button>
+          </form>
+          <p class='auth-toggle'>Don't have an account? <a href='#' onclick='toggleAuthForm(event)'>Sign Up</a></p>
+          <div class='demo-credentials'>
+            <p><strong>Demo Credentials:</strong></p>
+            <p>Admin: admin@hotel.com / admin123</p>
+            <p>Customer: customer@hotel.com / customer123</p>
+          </div>
+        </div>
+
+        <div id='signup-form' class='auth-form'>
+          <h2>Create Account</h2>
+          <form onsubmit='handleSignup(event)'>
+            <div class='form-group'>
+              <label>Full Name</label>
+              <input type='text' id='signup-name' placeholder='Enter your full name' required>
+            </div>
+            <div class='form-group'>
+              <label>Phone</label>
+              <input type='tel' id='signup-phone' placeholder='Enter your phone number' pattern='[0-9]{10}' maxlength='10' required>
+            </div>
+            <div class='form-group'>
+              <label>Email</label>
+              <input type='email' id='signup-email' placeholder='Enter your email' required>
+            </div>
+            <div class='form-group'>
+              <label>Password</label>
+              <input type='password' id='signup-password' placeholder='Create a password' required>
+            </div>
+            <button type='submit' class='btn-primary'>Sign Up</button>
+          </form>
+          <p class='auth-toggle'>Already have an account? <a href='#' onclick='toggleAuthForm(event)'>Sign In</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id='app-container' class='app-container'>
+    <header>
+      <div class='header-content'>
+        <div class='logo'>
+          <h1>Hotel Booking System</h1>
+        </div>
+        <div class='header-right'>
+          <span id='user-info' class='user-info'></span>
+          <button type='button' class='btn-logout' onclick='logout()'>Logout</button>
+        </div>
+      </div>
+    </header>
+
+    <div class='container'>
+      <div id='customer-dashboard' class='dashboard'>
+        <nav class='dashboard-nav'>
+          <button type='button' class='nav-btn active' onclick="switchCustomerTab('rooms', event)">Available Rooms</button>
+          <button type='button' class='nav-btn' onclick="switchCustomerTab('bookings', event)">My Bookings</button>
+          <button type='button' class='nav-btn' onclick="switchCustomerTab('wishlist', event)">My Wishlist</button>
+        </nav>
+
+        <div id='rooms-tab' class='tab-content active'>
+          <section class='hotel-hero'>
+            <div class='hotel-hero-copy'>
+              <p class='eyebrow'>Luxury coastal escape</p>
+              <h2>Stay in rooms designed like a destination, not just a stopover.</h2>
+              <p class='hero-description'>Discover curated suites, panoramic views, warm hospitality, and smart booking tools all in one place.</p>
+              <div class='hero-actions'>
+                <button type='button' class='btn-primary hero-btn' onclick="document.querySelectorAll('#customer-dashboard .nav-btn')[0]?.click()">Explore Rooms</button>
+                <button type='button' class='btn-secondary hero-btn hero-ghost' onclick="document.querySelectorAll('#customer-dashboard .nav-btn')[1]?.click()">View My Bookings</button>
+              </div>
+            </div>
+            <div class='hotel-hero-panel'>
+              <div class='hero-badge'>Oceanfront Collection</div>
+              <h3>Signature stay benefits</h3>
+              <div class='hero-feature-list'>
+                <div class='hero-feature'>
+                  <strong>Private views</strong>
+                  <span>Sea, skyline, and garden-facing rooms</span>
+                </div>
+                <div class='hero-feature'>
+                  <strong>Flexible booking</strong>
+                  <span>Modify, upgrade, cancel, and rebook with ease</span>
+                </div>
+                <div class='hero-feature'>
+                  <strong>Tailored comfort</strong>
+                  <span>Family suites, premium lofts, and executive rooms</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class='booking-highlights'>
+            <article class='highlight-card'>
+              <p class='highlight-label'>Room collection</p>
+              <h3 id='room-count-highlight'>0 curated stays</h3>
+              <span>Fresh room types across premium, family, and executive categories</span>
+            </article>
+            <article class='highlight-card'>
+              <p class='highlight-label'>Guest promise</p>
+              <h3>Elegant spaces</h3>
+              <span>Thoughtful amenities, scenic views, and responsive service</span>
+            </article>
+            <article class='highlight-card'>
+              <p class='highlight-label'>Best for</p>
+              <h3>Weekends to work trips</h3>
+              <span>Filter by budget, compare rooms, and book what fits your stay style</span>
+            </article>
+          </section>
+
+          <section class='stay-showcase'>
+            <div class='section-heading'>
+              <div>
+                <p class='eyebrow'>Featured experiences</p>
+                <h3>Choose the stay mood that matches your trip</h3>
+              </div>
+            </div>
+            <div class='showcase-grid'>
+              <article class='showcase-card'>
+                <span>Romantic</span>
+                <strong>Terrace suites and city lights</strong>
+                <p>Balconies, sea views, and lounge-ready interiors for elevated evenings.</p>
+              </article>
+              <article class='showcase-card'>
+                <span>Family</span>
+                <strong>Spacious multi-guest rooms</strong>
+                <p>Flexible layouts, breakfast-friendly options, and more room to settle in.</p>
+              </article>
+              <article class='showcase-card'>
+                <span>Business</span>
+                <strong>Quiet premium work stays</strong>
+                <p>Fast WiFi, workspace comforts, and polished interiors for productive travel.</p>
+              </article>
+            </div>
+          </section>
+
+          <div class='section-heading room-heading'>
+            <div>
+              <p class='eyebrow'>Available rooms</p>
+              <h3>Browse our current collection</h3>
+            </div>
+            <p class='section-copy'>Filter by budget, compare options side by side, and open any room to continue booking.</p>
+          </div>
+          <div class='room-tools'>
+            <div class='price-filter-card'>
+              <div class='filter-panel-header'>
+                <div>
+                  <label for='max-price-range'>Advanced Search</label>
+                  <p class='filter-subcopy'>Filter by price, amenities, rating, and location in one search.</p>
+                </div>
+                <button type='button' class='btn-secondary filter-reset-btn' onclick='resetRoomSearch()'>Reset</button>
+              </div>
+              <div class='price-range-grid'>
+                <div>
+                  <label for='min-price-range'>Min Price</label>
+                  <input type='range' id='min-price-range' min='0' max='10000' step='500' value='0'>
+                  <p id='min-price-label' class='filter-value'>From Rs0.00</p>
+                </div>
+                <div>
+                  <label for='max-price-range'>Max Price</label>
+                  <input type='range' id='max-price-range' min='0' max='10000' step='500' value='10000'>
+                  <p id='price-range-label' class='filter-value'>Showing all rooms up to Rs10000.00</p>
+                </div>
+              </div>
+              <div class='advanced-filter-grid'>
+                <div class='filter-field'>
+                  <label for='location-filter'>Location</label>
+                  <select id='location-filter'>
+                    <option value=''>All locations</option>
+                  </select>
+                </div>
+                <div class='filter-field'>
+                  <label for='rating-filter'>Minimum Rating</label>
+                  <select id='rating-filter'>
+                    <option value=''>Any rating</option>
+                    <option value='4'>4.0+</option>
+                    <option value='4.5'>4.5+</option>
+                    <option value='4.8'>4.8+</option>
+                  </select>
+                </div>
+              </div>
+              <div class='filter-field'>
+                <label>Amenities</label>
+                <div id='amenities-filter' class='amenities-filter-list'></div>
+              </div>
+            </div>
+            <div class='compare-toolbar'>
+              <div>
+                <p id='compare-count' class='compare-count'>No rooms selected for comparison</p>
+                <p id='results-summary' class='filter-value'>Loading curated stays...</p>
+              </div>
+              <div class='compare-toolbar-actions'>
+                <button type='button' class='btn-secondary' onclick='clearRoomComparison()'>Clear</button>
+                <button type='button' class='btn-primary' onclick='toggleComparisonPanel()'>Compare Rooms</button>
+              </div>
+            </div>
+          </div>
+          <div id='comparison-panel' class='comparison-panel'>
+            <div class='comparison-header'>
+              <h3>Room Comparison</h3>
+              <button type='button' class='btn-secondary comparison-close' onclick='toggleComparisonPanel(false)'>Close</button>
+            </div>
+            <div id='comparison-content'></div>
+          </div>
+          <div id='rooms' class='grid'></div>
+          <div id='rooms-pagination' class='pagination-bar'></div>
+        </div>
+
+        <div id='bookings-tab' class='tab-content'>
+          <h2>Your Bookings</h2>
+          <div id='customer-bookings' class='bookings-container'></div>
+        </div>
+
+        <div id='wishlist-tab' class='tab-content'>
+          <h2>My Wishlist</h2>
+          <div id='customer-wishlist' class='wishlist-container'>
+            <p class='empty-state'>Your wishlist is empty. Start exploring rooms to add some!</p>
+          </div>
+        </div>
+      </div>
+
+      <div id='admin-dashboard' class='dashboard' style='display: none;'>
+        <nav class='dashboard-nav'>
+          <button type='button' class='nav-btn active' onclick="switchAdminTab('analytics', event)">Analytics</button>
+          <button type='button' class='nav-btn' onclick="switchAdminTab('bookings', event)">All Bookings</button>
+          <button type='button' class='nav-btn' onclick="switchAdminTab('customers', event)">Customers</button>
+          <button type='button' class='nav-btn' onclick="switchAdminTab('rooms', event)">Rooms</button>
+        </nav>
+
+        <div id='analytics-tab-admin' class='tab-content active'>
+          <h2>Dashboard Analytics</h2>
+
+          <!-- Summary Cards -->
+          <div class='analytics-grid'>
+            <div class='stat-card'>
+              <h3>Total Revenue</h3>
+              <p id='total-revenue' class='stat-value'>Rs0</p>
+            </div>
+            <div class='stat-card'>
+              <h3>Total Bookings</h3>
+              <p id='total-bookings' class='stat-value'>0</p>
+            </div>
+            <div class='stat-card'>
+              <h3>Total Customers</h3>
+              <p id='total-customers' class='stat-value'>0</p>
+            </div>
+            <div class='stat-card'>
+              <h3>Occupancy Rate</h3>
+              <p id='occupancy-rate' class='stat-value'>0%</p>
+            </div>
+            <div class='stat-card'>
+              <h3>Cancellation Rate</h3>
+              <p id='cancellation-rate' class='stat-value'>0%</p>
+            </div>
+          </div>
+
+          <!-- Charts Section -->
+          <div class='charts-section'>
+            <div class='chart-container'>
+              <h3>Most Booked Rooms</h3>
+              <canvas id='rooms-chart' width='400' height='200'></canvas>
+            </div>
+
+            <div class='chart-container'>
+              <h3>Monthly Bookings (Last 12 Months)</h3>
+              <canvas id='monthly-chart' width='400' height='200'></canvas>
+            </div>
+
+            <div class='chart-container'>
+              <h3>Daily Bookings (Last 30 Days)</h3>
+              <canvas id='daily-chart' width='400' height='200'></canvas>
+            </div>
+
+            <div class='chart-container'>
+              <h3>Revenue by Room Type</h3>
+              <canvas id='revenue-chart' width='400' height='200'></canvas>
+            </div>
+          </div>
+
+          <!-- Detailed Tables -->
+          <div class='analytics-tables'>
+            <div class='table-section'>
+              <h3>Room Performance</h3>
+              <table id='room-performance-table' class='analytics-table'>
+                <thead>
+                  <tr>
+                    <th>Room Type</th>
+                    <th>Bookings</th>
+                    <th>Revenue</th>
+                    <th>Avg. Revenue</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+
+            <div class='table-section'>
+              <h3>Recent Bookings Trend</h3>
+              <table id='bookings-trend-table' class='analytics-table'>
+                <thead>
+                  <tr>
+                    <th>Period</th>
+                    <th>Bookings</th>
+                    <th>Revenue</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div id='bookings-tab-admin' class='tab-content'>
+          <h2>All Bookings</h2>
+          <div class='admin-search'>
+            <input type='text' id='booking-search' placeholder='Search by name or phone' maxlength='50'>
+            <select id='booking-status-filter'>
+              <option value=''>All Status</option>
+              <option value='Booked'>Booked</option>
+              <option value='Cancelled'>Cancelled</option>
+            </select>
+            <button type='button' class='btn-primary' onclick='loadAdminBookings()'>Search</button>
+          </div>
+          <div id='admin-bookings' class='bookings-container'></div>
+        </div>
+
+        <div id='customers-tab-admin' class='tab-content'>
+          <h2>Customer Details</h2>
+          <div class='admin-search'>
+            <input type='text' id='customer-search' placeholder='Search by name or phone' maxlength='50'>
+            <button type='button' class='btn-primary' onclick='loadAdminCustomers()'>Search</button>
+          </div>
+          <div id='admin-customers' class='customers-container'></div>
+        </div>
+
+        <div id='rooms-tab-admin' class='tab-content'>
+          <h2>Room Management</h2>
+          <div id='admin-rooms' class='grid'></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id='modal' class='modal'>
+    <div class='modal-content'>
+      <button type='button' class='close-btn' onclick='closeModal()'>&times;</button>
+      <h2>Book Room</h2>
+      <form onsubmit='submitBooking(event)'>
+        <div class='form-group'>
+          <label>Guests *</label>
+          <input type='number' id='booking-guests' min='1' value='1' required>
+        </div>
+        <div class='form-group'>
+          <label>Check-in Date *</label>
+          <input type='date' id='check-in' required>
+        </div>
+        <div class='form-group'>
+          <label>Check-out Date *</label>
+          <input type='date' id='check-out' required>
+        </div>
+        <div class='calendar-panel'>
+          <div class='calendar-header'>
+            <strong>Availability Calendar</strong>
+            <span class='calendar-legend'><span class='legend available'></span> Available <span class='legend blocked'></span> Booked</span>
+          </div>
+          <p id='booking-calendar-message' class='calendar-message'></p>
+          <div id='booking-calendar' class='availability-calendar'></div>
+        </div>
+        <div class='room-info'>
+          <h3 id='room-name'></h3>
+          <p id='room-price'></p>
+          <p id='room-capacity'></p>
+          <p id='room-view'></p>
+          <p id='room-rating'></p>
+          <p id='room-amenities'></p>
+          <p id='room-description'></p>
+          <p id='total-cost'></p>
+        </div>
+        <div class='room-reviews-panel'>
+          <div class='reviews-panel-header'>
+            <strong>Guest Reviews</strong>
+            <span id='room-review-summary'></span>
+          </div>
+          <div id='room-reviews-list' class='room-reviews-list'></div>
+        </div>
+        <div class='modal-actions'>
+          <button type='submit' class='btn-primary'>Confirm Booking</button>
+          <button type='button' class='btn-secondary' onclick='closeModal()'>Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id='edit-modal' class='modal'>
+    <div class='modal-content'>
+      <button type='button' class='close-btn' onclick='closeEditModal()'>&times;</button>
+      <h2>Update Booking</h2>
+      <form onsubmit='submitBookingUpdate(event)'>
+        <input type='hidden' id='edit-booking-id'>
+        <div class='form-group'>
+          <label>Room Type *</label>
+          <select id='edit-room-id' required></select>
+        </div>
+        <div class='form-group'>
+          <label>Guests *</label>
+          <input type='number' id='edit-guests' min='1' required>
+        </div>
+        <div class='form-group'>
+          <label>Check-in Date *</label>
+          <input type='date' id='edit-check-in' required>
+        </div>
+        <div class='form-group'>
+          <label>Check-out Date *</label>
+          <input type='date' id='edit-check-out' required>
+        </div>
+        <div class='calendar-panel'>
+          <div class='calendar-header'>
+            <strong>Availability Calendar</strong>
+            <span class='calendar-legend'><span class='legend available'></span> Available <span class='legend blocked'></span> Booked</span>
+          </div>
+          <p id='edit-calendar-message' class='calendar-message'></p>
+          <div id='edit-calendar' class='availability-calendar'></div>
+        </div>
+        <div class='room-info'>
+          <p id='edit-room-capacity'></p>
+          <p id='edit-room-view'></p>
+          <p id='edit-room-amenities'></p>
+          <p id='edit-room-description'></p>
+          <p id='edit-total-cost'></p>
+        </div>
+        <div class='modal-actions'>
+          <button type='submit' class='btn-primary'>Save Changes</button>
+          <button type='button' class='btn-secondary' onclick='closeEditModal()'>Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id='success-modal' class='modal'>
+    <div class='modal-content success'>
+      <h2>Booking Successful!</h2>
+      <p id='success-message'></p>
+      <div id='upgrade-suggestions' class='suggestions-panel'></div>
+      <div class='modal-actions'>
+        <button type='button' class='btn-secondary' onclick='downloadLatestInvoice()'>Download Invoice</button>
+        <button type='button' class='btn-primary' onclick='closeSuccessModal()'>Done</button>
+      </div>
+    </div>
+  </div>
+
+  <div id='review-modal' class='modal'>
+    <div class='modal-content'>
+      <button type='button' class='close-btn' onclick='closeReviewModal()'>&times;</button>
+      <h2>Rate Your Stay</h2>
+      <form onsubmit='submitReview(event)'>
+        <input type='hidden' id='review-booking-id'>
+        <div class='form-group'>
+          <label for='review-rating'>Rating</label>
+          <select id='review-rating' required>
+            <option value=''>Choose rating</option>
+            <option value='5'>5 - Excellent</option>
+            <option value='4'>4 - Very Good</option>
+            <option value='3'>3 - Good</option>
+            <option value='2'>2 - Fair</option>
+            <option value='1'>1 - Poor</option>
+          </select>
+        </div>
+        <div class='form-group'>
+          <label for='review-text'>Review</label>
+          <textarea id='review-text' rows='5' maxlength='1200' placeholder='Tell future guests what stood out about your stay.'></textarea>
+        </div>
+        <div class='modal-actions'>
+          <button type='submit' class='btn-primary'>Submit Review</button>
+          <button type='button' class='btn-secondary' onclick='closeReviewModal()'>Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id='admin-room-modal' class='modal'>
+    <div class='modal-content'>
+      <button type='button' class='close-btn' onclick='closeAdminRoomModal()'>&times;</button>
+      <h2>Room Details</h2>
+      <div class='room-info'>
+        <h3 id='admin-room-name'></h3>
+        <p id='admin-room-price'></p>
+        <p id='admin-room-capacity'></p>
+        <p id='admin-room-location'></p>
+        <p id='admin-room-rating'></p>
+        <p id='admin-room-bookings'></p>
+        <p id='admin-room-amenities'></p>
+      </div>
+      <div class='room-reviews-panel'>
+        <div class='reviews-panel-header'>
+          <strong>Room Summary</strong>
+        </div>
+        <p id='admin-room-description' class='review-empty'></p>
+      </div>
+    </div>
+  </div>
+
+  <script src='script.js'></script>
+</body>
+</html>
